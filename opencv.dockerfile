@@ -28,13 +28,15 @@ RUN . .venv/bin/activate && \
 
 # Make
 RUN cd ${OPENCV_BUILD} && \
-  # make -j"${nproc}" && \
-  make -j12 && \
+  make -j"${nproc}" && \
   # Install to ${OPENCV_DIST}
   # headers to ${OPENCV_DIST}/include and 
   # libraries to ${OPENCV_DIST}/lib
   make install && \
-  ldconfig && \
-  # Clean build folder
-  cd ${OPENCV_BUILD} && \
+  ldconfig
+
+# Don't clean if you plan to do make DESTDIR=somewhere_else install 
+# Comment to skip cleaning
+# Clean build folder
+RUN cd ${OPENCV_BUILD} && \
   make clean

@@ -43,7 +43,10 @@ RUN cd ${OPENCV_BUILD} && \
   # headers to ${OPENCV_DIST}/include and 
   # libraries to ${OPENCV_DIST}/lib
   make install && \
-  ldconfig && \
-  # Clean build folder
-  cd ${OPENCV_BUILD} && \
+  ldconfig
+
+# Don't clean if you plan to do make DESTDIR=something install 
+# Uncomment to clean build folder
+# Clean build folder
+RUN cd ${OPENCV_BUILD} && \
   make clean

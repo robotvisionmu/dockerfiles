@@ -179,3 +179,24 @@ cmake
 
 </p>
 </details>
+
+## Install to Custom Directory
+
+By default `make install` installs to `/usr/local`. If you plan to install to a different directory, say to `./opencv`, then
+
+- comment `Clean build folder` section found at the end of opencv[-gpu].dockerfile
+- build the image
+- once it's finished, execute the following
+
+```sh
+docker run                        `# run the default command, in this case it's the shell` \
+    --rm                          `# remove container + it's fs once done (image will not be deleted)` \
+    -it                           `# interactive shell` \
+    -v $(pwd)/opencv:/opencv      `# mount at ./opecv at /opencv in the image` \
+    opencv:4.5.3-gpu              `# full docker tag`
+
+# go to build dir, change prefix and make install
+cd opencv-4.5.3/build
+cmake -D CMAKE_INSTALL_PREFIX=/opencv ..
+make install
+```
