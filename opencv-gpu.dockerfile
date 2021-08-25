@@ -28,16 +28,17 @@ RUN . .venv/bin/activate && \
   -D WITH_CUDNN=ON \
   -D OPENCV_DNN_CUDA=ON \
   -D WITH_CUBLAS=ON \
-  # -D CUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda \
   -D WITH_OPENCL=ON \
-  # -D OpenCL_LIBRARY=/usr/local/cuda/lib64/libOpenCL.so \
-  # -D OpenCL_INCLUDE_DIR=/usr/local/cuda/include/ \
   ..
+
+# # Extra config, usually auto detected, use if needed
+# -D CUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda \
+# -D OpenCL_LIBRARY=/usr/local/cuda/lib64/libOpenCL.so \
+# -D OpenCL_INCLUDE_DIR=/usr/local/cuda/include/ \
 
 # Make
 RUN cd ${OPENCV_BUILD} && \
-  # make -j"${nproc}" && \
-  make -j12 && \
+  make -j"${nproc}" && \
   # Install to ${OPENCV_DIST}
   # headers to ${OPENCV_DIST}/include and 
   # libraries to ${OPENCV_DIST}/lib

@@ -25,13 +25,12 @@ ENV OPENCV_HOME=${OPENCV_ROOT}/opencv-${OPENCV_VERSION}/
 RUN mkdir ${OPENCV_ROOT}
 WORKDIR ${OPENCV_ROOT}
 
-# Setup numpy using poetry, activate env
+# Setup numpy using poetry
 RUN poetry init \
   --no-interaction \
   --author "Saravanabalagi" \
   --python ">=3.8,<3.11" && \
-  poetry add numpy && \
-  . .venv/bin/activate
+  poetry add numpy
 
 # Download and unzip OpenCV and opencv_contrib and delete zip files
 RUN wget https://github.com/opencv/opencv/archive/$OPENCV_VERSION.zip && \
