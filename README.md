@@ -1,10 +1,14 @@
-<center>
+<h1 align="center"> OpenCV Docker Files </h1>
 
-# OpenCV Docker Files
+<div align="center">
 
-This repo contains [opencv](https://github.com/opencv/opencv) dockerfiles for both CPU and CUDA builds tested to work successfully for [opencv-4.5.3](https://github.com/opencv/opencv/releases/tag/4.5.3) with [opencv-contrib-4.5.3](https://github.com/opencv/opencv_contrib/releases/tag/4.5.3).
+<a> <img src="https://img.shields.io/badge/Python-3.8-blue" alt="Python:3.8" /> </a>
+<a> <img src="https://img.shields.io/badge/OpenCV-4.5.3-yellowgreen" alt="OpenCV:4.5.3" /> </a>
+<a> <img src="https://img.shields.io/badge/Build-CUDA%20|%20CPU-green" alt="Build:CUDA | CPU" /> </a>
 
-</center>
+This repo contains [opencv](https://github.com/opencv/opencv) dockerfiles for both CPU and CUDA builds tested to work successfully for [opencv-4.5.3](https://github.com/opencv/opencv/releases/tag/4.5.3) with [opencv-contrib-4.5.3](https://github.com/opencv/opencv_contrib/releases/tag/4.5.3). This should allow beginners to quickly build OpenCV and use it as a dependency for other projects.
+  
+</div>
 
 ## Quick Start
 
@@ -13,18 +17,12 @@ Clone the repo and change directory to the local copy:
 ```sh
 git clone https://github.com/robotvisionmu/opencv.git
 cd opencv
-```
 
-If you want to change any settings like OpenCV version or base image, 
-
-### Build
-
-```sh
-git clone https://github.com/robotvisionmu/opencv.git
-cd opencv
+# pre-build, readies dependencies
 docker build --rm -f "python.dockerfile" -t python:py38-cuda11.1-cudnn8-devel-ubuntu20.04
 docker build --rm -f "opencv-prebuild.dockerfile" -t opencv:4.5.3-prebuild
 
+# make
 docker build --rm -f "opencv-gpu.dockerfile" -t opencv:4.5.3-gpu .    # for CUDA build
 docker build --rm -f "opencv.dockerfile" -t opencv:4.5.3 .            # for CPU build
 ```
@@ -33,12 +31,12 @@ docker build --rm -f "opencv.dockerfile" -t opencv:4.5.3 .            # for CPU 
 
 You can change the base image to `ubuntu:20.04` if you want a pure CPU build without any CUDA files. Make sure you change the _full docker tag_ in the following places:
 
-- The first line `FROM` in [opencv](opencv.dockerfile) and [opencv-gpu](opencv-gpu.dockerfile) dockerfiles
+- The first line `FROM` in [opencv](opencv.dockerfile#L1) and [opencv-gpu](opencv-gpu.dockerfile#L1) dockerfiles
 - `docker build` commands executed in the terminal
 
 If you want to adjust OpenCV version, you need to change in the following places:
 
-- OPENCV_VERSION variable in [prebuild](opencv-prebuild.dockerfile#L21) file
+- `OPENCV_VERSION` variable in [prebuild](opencv-prebuild.dockerfile#L21) file
 - Full docker tag as mentioned above
 
 
