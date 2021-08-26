@@ -12,35 +12,26 @@ This repo contains [opencv](https://github.com/opencv/opencv) dockerfiles for bo
 
 ## Quick Start
 
-Clone the repo and change directory to the local copy:
+Clone the repo and change directory to the local downloaded copy:
 
 ```sh
 git clone https://github.com/robotvisionmu/opencv.git
 cd opencv
 
-# pre-build, readies dependencies
-docker build --rm -f "python.dockerfile" -t python:py38-cuda11.1-cudnn8-devel-ubuntu20.04
-docker build --rm -f "opencv-prebuild.dockerfile" -t opencv:4.5.3-prebuild
-
-# make
-docker build --rm -f "opencv-gpu.dockerfile" -t opencv:4.5.3-gpu .    # for CUDA build
-docker build --rm -f "opencv.dockerfile" -t opencv:4.5.3 .            # for CPU build
+docker build --rm -f "opencv4.5.3-cuda.dockerfile" -t opencv:4.5.3-gpu .    # for CUDA build
+docker build --rm -f "opencv4.5.3.dockerfile" -t opencv:4.5.3 .            # for CPU build
 ```
 
 ## Settings
 
-You can change the base image to `ubuntu:20.04` if you want a pure CPU build without any CUDA files. Make sure you change the _full docker tag_ in the following places:
-
-- The first line `FROM` in [opencv](opencv.dockerfile#L1) and [opencv-gpu](opencv-gpu.dockerfile#L1) dockerfiles
-- `docker build` commands executed in the terminal
-
 If you want to adjust OpenCV version, you need to change in the following places:
 
-- `OPENCV_VERSION` variable in [prebuild](opencv-prebuild.dockerfile#L21) file
-- Full docker tag as mentioned above
+- `OPENCV_VERSION` variable in [dockerfile](opencv4.5.3-cuda.dockerfile#L13)
+- Docker tags in
+  - The first line `FROM` in [dockerfile](opencv4.5.3-cuda.dockerfile#L1)
+  - `.dockerfile` name and `docker build` commands executed in the terminal
 
-
-Cmake settings should be straightforward to edit in the [cmake](opencv-gpu.dockerfile#L11) command:
+Cmake settings should be straightforward to edit in the [cmake](opencv4.5.3-cuda.dockerfile#L58) command:
 
 ```sh
 cmake 
@@ -63,7 +54,7 @@ cmake
 --     Version control (extra):     unknown
 -- 
 --   Platform:
---     Timestamp:                   2021-08-25T18:04:36Z
+--     Timestamp:                   2021-08-26T13:42:20Z
 --     Host:                        Linux 5.8.0-53-generic x86_64
 --     CMake:                       3.16.3
 --     CMake generator:             Unix Makefiles
@@ -99,10 +90,10 @@ cmake
 --     3rdparty dependencies:
 -- 
 --   OpenCV modules:
---     To be built:                 alphamat aruco barcode bgsegm bioinspired calib3d ccalib core cudaarithm cudabgsegm cudacodec cudafeatures2d cudafilters cudaimgproc cudalegacy cudaobjdetect cudaoptflow cudastereo cudawarping cudev cvv datasets dnn dnn_objdetect dnn_superres dpm face features2d flann freetype fuzzy gapi hdf hfs highgui img_hash imgcodecs imgproc intensity_transform line_descriptor mcc ml objdetect optflow phase_unwrapping photo plot quality rapid reg rgbd saliency shape stereo stitching structured_light superres surface_matching text tracking ts video videoio videostab wechat_qrcode xfeatures2d ximgproc xobjdetect xphoto
+--     To be built:                 alphamat aruco barcode bgsegm bioinspired calib3d ccalib core cudaarithm cudabgsegm cudacodec cudafeatures2d cudafilters cudaimgproc cudalegacy cudaobjdetect cudaoptflow cudastereo cudawarping cudev cvv datasets dnn dnn_objdetect dnn_superres dpm face features2d flann freetype fuzzy gapi hdf hfs highgui img_hash imgcodecs imgproc intensity_transform line_descriptor mcc ml objdetect optflow phase_unwrapping photo plot python3 quality rapid reg rgbd saliency shape stereo stitching structured_light superres surface_matching text tracking ts video videoio videostab wechat_qrcode xfeatures2d ximgproc xobjdetect xphoto
 --     Disabled:                    world
 --     Disabled by dependency:      -
---     Unavailable:                 java julia matlab ovis python2 python3 sfm viz
+--     Unavailable:                 java julia matlab ovis python2 sfm viz
 --     Applications:                tests perf_tests apps
 --     Documentation:               NO
 --     Non-free algorithms:         YES
@@ -119,7 +110,7 @@ cmake
 --   Media I/O: 
 --     ZLib:                        /usr/lib/x86_64-linux-gnu/libz.so (ver 1.2.11)
 --     JPEG:                        /usr/lib/x86_64-linux-gnu/libjpeg.so (ver 80)
---     WEBP:                        build (ver encoder: 0x020f)
+--     WEBP:                        /usr/lib/x86_64-linux-gnu/libwebp.so (ver encoder: 0x020e)
 --     PNG:                         /usr/lib/x86_64-linux-gnu/libpng.so (ver 1.6.37)
 --     TIFF:                        /usr/lib/x86_64-linux-gnu/libtiff.so (ver 42 / 4.1.0)
 --     JPEG 2000:                   build (ver 2.4.0)
@@ -150,13 +141,13 @@ cmake
 --     Intel IPP IW:                sources (2020.0.0)
 --               at:                /opt/opencv/opencv-4.5.3/build/3rdparty/ippicv/ippicv_lnx/iw
 --     VA:                          YES
---     Lapack:                      YES (/usr/lib/x86_64-linux-gnu/libopenblas.so)
+--     Lapack:                      YES (/usr/lib/x86_64-linux-gnu/liblapack.so /usr/lib/x86_64-linux-gnu/libcblas.so /usr/lib/x86_64-linux-gnu/libatlas.so)
 --     Eigen:                       YES (ver 3.3.7)
 --     Custom HAL:                  NO
 --     Protobuf:                    build (3.5.1)
 -- 
 --   NVIDIA CUDA:                   YES (ver 11.1, CUFFT CUBLAS)
---     NVIDIA GPU arch:             35 37 50 52 60 61 70 75 80 86
+--     NVIDIA GPU arch:             52 60 61 70 75 80 86
 --     NVIDIA PTX archs:
 -- 
 --   cuDNN:                         YES (ver 8.0.5)
@@ -164,6 +155,12 @@ cmake
 --   OpenCL:                        YES (INTELVA)
 --     Include path:                /opt/opencv/opencv-4.5.3/3rdparty/include/opencl/1.2
 --     Link libraries:              Dynamic load
+-- 
+--   Python 3:
+--     Interpreter:                 /opt/opencv/.venv/bin/python3 (ver 3.8.10)
+--     Libraries:                   /usr/lib (ver 3.8.10)
+--     numpy:                       /opt/opencv/.venv/lib/python3.8/site-packages/numpy/core/include (ver 1.21.2)
+--     install path:                lib/python3.8/site-packages/cv2/python-3.8
 -- 
 --   Python (for build):            /opt/opencv/.venv/bin/python3
 -- 
@@ -189,11 +186,11 @@ By default `make install` installs to `/usr/local`. If you plan to install to a 
 - once it's finished, execute the following
 
 ```sh
-docker run                        `# run the default command, in this case it's the shell` \
-    --rm                          `# remove container + it's fs once done (image will not be deleted)` \
-    -it                           `# interactive shell` \
-    -v $(pwd)/opencv:/opencv      `# mount at ./opecv at /opencv in the image` \
-    opencv:4.5.3-gpu              `# full docker tag`
+docker run                    `# run the default command, in this case it's the shell` \
+    --rm                      `# remove container + it's fs once done (image will not be deleted)` \
+    -it                       `# interactive shell` \
+    -v $(pwd)/opencv:/opencv  `# mount at ./opecv at /opencv in the image` \
+    opencv:4.5.3-gpu          `# full docker tag`
 
 # go to build dir, change prefix and make install
 cd opencv-4.5.3/build
