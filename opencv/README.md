@@ -179,31 +179,43 @@ cmake
 
 ## Install to Custom Directory
 
-By default `make install` installs to `/usr/local`. If you plan to install to a different directory, say to `./opencv`, then
+By default `make install` installs to `/usr/local`. If for whatever reason, you plan to install to a different directory, say to `./opencv`, then
 
 - comment `Clean build folder` section found at the end of dockerfile
-- build the image
+- build the image again, it should be near instant with docker layers caching
 - once it's finished, execute the following
 
 ```sh
-docker run                    `# run the default command, in this case it's the shell` \
-    --rm                      `# remove container + it's fs once done (image will not be deleted)` \
-    -it                       `# interactive shell` \
-    -v $(pwd)/opencv:/opencv  `# mount at ./opecv at /opencv in the image` \
-    opencv:4.5.3-cuda         `# full docker tag`
+mkdir opencv
+docker run --rm -it -v $(pwd)/opencv:/opencv opencv:4.5.3-cuda  
 
+# inside docker
 # go to build dir, change prefix and make install
 cd opencv-4.5.3/build
 cmake -D CMAKE_INSTALL_PREFIX=/opencv ..
 make install
+exit
 
-# copy other libs if necessary
-cp /usr/lib/x86_64-linux-gnu/libatlas.so.3 /opencv/lib
-cp /usr/lib/x86_64-linux-gnu/libblas.so.3 /opencv/lib
-cp /usr/lib/x86_64-linux-gnu/libcblas.so.3 /opencv/lib
-cp /usr/lib/x86_64-linux-gnu/libgfortran.so.5 /opencv/lib
-cp /usr/lib/x86_64-linux-gnu/liblapack.so.3 /opencv/lib
-cp /usr/lib/x86_64-linux-gnu/libQt5OpenGL.so.5 /opencv/lib
-cp /usr/lib/x86_64-linux-gnu/libQt5Test.so.5 /opencv/lib
-cp /usr/lib/x86_64-linux-gnu/libtbb.so.2 /opencv/lib
+# outside docker
+# files inside will still be associated with user 0 
+# i.e. root in host, change ownership recursively if required
+sudo chown -R $USER:$USER opencv/
 ```
+
+This custom installation directory will now contain all necessary files for opencv, 
+and further compilation adding this should work 
+as long as the dependencies (e.g. libblas, liblapack) are present
+
+## Viewing Images with OpenCV
+
+There is this neat little trick that will allow X11 forwarding to host:
+
+```sh
+xhost                  # access control enabled, only authorized clients can connect
+xhost +local:          # non-network local connections being added to access control list
+
+export XSOCK=/tmp/.X11-unix
+docker run --rm -it -v $XSOCK:$XSOCK -e DISPLAY -v $(pwd):/project opencv:4.5.3-cuda
+# cv::imshow("Image", img); will now show a popup
+```
+

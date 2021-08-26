@@ -93,4 +93,5 @@ RUN cd ${OPENCV_BUILD} && \
 RUN cd ${OPENCV_BUILD} && \
   make clean
 
-CMD echo "OpenCV ${OPENCV_VERSION} (${OPENCV_DIST})"
+CMD echo "OpenCV ${OPENCV_VERSION}" && \
+  /bin/bash
