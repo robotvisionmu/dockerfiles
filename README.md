@@ -18,7 +18,7 @@ Clone the repo and change directory to the local downloaded copy:
 git clone https://github.com/robotvisionmu/opencv.git
 cd opencv
 
-docker build --rm -f "opencv4.5.3-cuda.dockerfile" -t opencv:4.5.3-gpu .    # for CUDA build
+docker build --rm -f "opencv4.5.3-cuda.dockerfile" -t opencv:4.5.3-cuda .    # for CUDA build
 docker build --rm -f "opencv4.5.3.dockerfile" -t opencv:4.5.3 .            # for CPU build
 ```
 
@@ -181,7 +181,7 @@ cmake
 
 By default `make install` installs to `/usr/local`. If you plan to install to a different directory, say to `./opencv`, then
 
-- comment `Clean build folder` section found at the end of opencv[-gpu].dockerfile
+- comment `Clean build folder` section found at the end of dockerfile
 - build the image
 - once it's finished, execute the following
 
@@ -190,7 +190,7 @@ docker run                    `# run the default command, in this case it's the 
     --rm                      `# remove container + it's fs once done (image will not be deleted)` \
     -it                       `# interactive shell` \
     -v $(pwd)/opencv:/opencv  `# mount at ./opecv at /opencv in the image` \
-    opencv:4.5.3-gpu          `# full docker tag`
+    opencv:4.5.3-cuda         `# full docker tag`
 
 # go to build dir, change prefix and make install
 cd opencv-4.5.3/build

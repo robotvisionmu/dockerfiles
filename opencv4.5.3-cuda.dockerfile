@@ -92,7 +92,7 @@ RUN . .venv/bin/activate && \
 
 # Make
 RUN cd ${OPENCV_BUILD} && \
-  make -j15 && \
+  make -j"$(nproc)" && \
   # Install to ${OPENCV_DIST}
   # headers to ${OPENCV_DIST}/include and 
   # libraries to ${OPENCV_DIST}/lib
@@ -101,8 +101,8 @@ RUN cd ${OPENCV_BUILD} && \
 
 # Don't clean if you plan to install to a custom dir
 # Clean build folder
-# RUN cd ${OPENCV_BUILD} && \
-#   make clean
+RUN cd ${OPENCV_BUILD} && \
+  make clean
 
 CMD echo "OpenCV ${OPENCV_VERSION} (${OPENCV_DIST})"
 
