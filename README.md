@@ -199,4 +199,14 @@ docker run                        `# run the default command, in this case it's 
 cd opencv-4.5.3/build
 cmake -D CMAKE_INSTALL_PREFIX=/opencv ..
 make install
+
+# copy other libs if necessary
+cp /usr/lib/x86_64-linux-gnu/libatlas.so.3 /opencv/lib
+cp /usr/lib/x86_64-linux-gnu/libblas.so.3 /opencv/lib
+cp /usr/lib/x86_64-linux-gnu/libcblas.so.3 /opencv/lib
+cp /usr/lib/x86_64-linux-gnu/libgfortran.so.5 /opencv/lib
+cp /usr/lib/x86_64-linux-gnu/liblapack.so.3 /opencv/lib
+cp /usr/lib/x86_64-linux-gnu/libQt5OpenGL.so.5 /opencv/lib
+cp /usr/lib/x86_64-linux-gnu/libQt5Test.so.5 /opencv/lib
+cp /usr/lib/x86_64-linux-gnu/libtbb.so.2 /opencv/lib
 ```
